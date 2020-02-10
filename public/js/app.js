@@ -1,7 +1,7 @@
-console.log('test')
+
 window.Mercadopago.setPublishableKey("TEST-3e46d739-4bc5-4ea1-99be-ffc0a30bba34");
 
-console.log(window.Mercadopago.getIdentificationTypes());
+window.Mercadopago.getIdentificationTypes();
 
 function addEvent(to, type, fn) {
     if (document.addEventListener) {
@@ -23,7 +23,6 @@ function getBin() {
 
 function guessingPaymentMethod(event) {
     var bin = getBin();
-    console.log(bin);
 
     if (event.type == "keyup") {
         if (bin.length >= 6) {
@@ -65,7 +64,6 @@ function setPaymentMethodInfo(status, response) {
 
     } else {
         alert(`payment method info error: ${response}`);
-        console.log(response)
     }
 };
 
@@ -78,14 +76,12 @@ function doPay(event) {
         var $form = document.querySelector('#pay');
 
         window.Mercadopago.createToken($form, sdkResponseHandler); // The function "sdkResponseHandler" is defined below
-        console.log('token', token);
         return false;
     }
 };
 
 function sdkResponseHandler(status, response) {
-    console.log('sdkResponseHandler', 'response');
-    console.log(response);
+
     if (status != 200 && status != 201) {
         alert("verify filled data");
     } else {
@@ -99,3 +95,28 @@ function sdkResponseHandler(status, response) {
         form.submit();
     }
 };
+
+
+function setInstallmentInfo(status, response) {
+    var issuerId = document.querySelector('#issuerId');
+    var selectorInstallments = document.querySelector("#installments");
+    fragment = document.createDocumentFragment();
+    selectorInstallments.options.length = 0;
+
+    if (response.length > 0) {
+        var option = new Option("Escoja...", '-1'),
+        payerCosts = response[0].payer_costs;
+        fragment.appendChild(option);
+
+        for (var i = 0; i < payerCosts.length; i++) {
+            fragment.appendChild(new Option(payerCosts[i].recommended_message, payerCosts[i].installments));
+        }
+
+        selectorInstallments.appendChild(fragment);
+        selectorInstallments.removeAttribute('disabled');
+        issuerId.value = response[0].issuer.id;
+    }
+};
+
+
+

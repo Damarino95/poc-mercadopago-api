@@ -6,6 +6,10 @@ const mercadopago = require("mercadopago")
 const app = express()
 const port = process.env.PORT || 3000
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // Define paths for Express config
 const publicDirectoryPath = path.join(__dirname, '../public')
 const viewsPath = path.join(__dirname, '../templates/views')
@@ -72,25 +76,68 @@ let preference = {
 };
 
 
-app.post('/tokenize', (req, res) => {
-    console.log('Request', req.form)
-})
-
 app.post('/procesar-pago', (req, res) => {
 
-    console.log('req.body', req.body);
+    const { body } = req;
+
+
 
     var payment_data = {
-        transaction_amount: 121,
-        token: 'ff8080814c11e237014c1ff593b57b4d',
-        description: 'Small Paper Pants',
-        installments: 3,
-        payment_method_id: 'amex',
-        issuer_id: 310,
+        transaction_amount: Number(body.amount),
+        token: body.token,
+        description: body.description,
+        installments: Number(body.installments),
+        payment_method_id: body.paymentMethodId,
         payer: {
-            email: 'cristopher.conn@gmail.com'
+            "email": body.email
+        },
+        external_reference: "Reference_1234",
+        metadata: {
+            key1: "value1",
+            key2: "value2"
+        },
+        statement_descriptor: "MY E-STORE",
+        notification_url: "https://mercadopago-test-endpoint.free.beeceptor.com/webhooks",
+        additional_info: {
+            items: [
+                {
+                    id: "item-ID-1234",
+                    title: "Title of what you are paying for",
+                    picture_url: "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
+                    description: "Item description",
+                    category_id: "art", // Available categories at https://api.mercadopago.com/item_categories
+                    quantity: 1,
+                    unit_price: 100
+                }
+            ],
+            payer: {
+                first_name: "user-name",
+                last_name: "user-surname",
+                registration_date: "2020-02-10T12:58:41.425-04:00",
+                phone: {
+                    area_code: "11",
+                    number: "4444-4444"
+                },
+                address: {
+                    zip_code: "06233-200",
+                    street_name: "Av das Nacoes Unidas",
+                    street_number: 3003
+                }
+            }
         }
     };
+
+    /*var payment_data = {
+        transaction_amount: Number(body.amount),
+        token: body.token,
+        description: body.description,
+        installments: Number(body.installments),
+        payment_method_id: body.paymentMethodId,
+        issuer_id: body.issuerId,
+        payer: {
+            email: body.email
+        }
+    };*/
     // Save and posting the payment
     mercadopago.payment.save(payment_data).then(function (data) {
         console.log(data);

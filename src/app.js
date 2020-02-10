@@ -92,7 +92,6 @@ app.get('/procesar-pago', (req, res) => {
       console.log(error);
   });
 
-
 })
 
 

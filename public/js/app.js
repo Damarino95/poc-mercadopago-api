@@ -78,12 +78,14 @@ function doPay(event) {
         var $form = document.querySelector('#pay');
 
         window.Mercadopago.createToken($form, sdkResponseHandler); // The function "sdkResponseHandler" is defined below
-
+        console.log('token', token);
         return false;
     }
 };
 
 function sdkResponseHandler(status, response) {
+    console.log('sdkResponseHandler', 'response');
+    console.log(response);
     if (status != 200 && status != 201) {
         alert("verify filled data");
     } else {

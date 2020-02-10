@@ -8,16 +8,9 @@
 
 <body>
 
-
-    <form action="tokenize" method="POST">
-        <script src="https://www.mercadopago.com.ar/integrations/v1/web-tokenize-checkout.js"
-            data-public-key="TEST-3e46d739-4bc5-4ea1-99be-ffc0a30bba34" data-transaction-amount="100.00">
-        </script>
-    </form>
-
 <body>
 
-    <form action="/procesar_pago" method="post" id="pay" name="pay">
+    <form action="/procesar-pago" method="post" id="pay" name="pay">
         <fieldset>
             <ul>
                 <li>
@@ -28,6 +21,7 @@
                 <li>
                     <label for="cardNumber">Credit card number:</label>
                     <input type="text" id="cardNumber" data-checkout="cardNumber" placeholder="4509 9535 6623 3704"
+                        value="4170068810108020"
                         onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false"
                         onDrag="return false" onDrop="return false" autocomplete=off />
                 </li>

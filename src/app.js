@@ -75,11 +75,7 @@ let preference = {
 
 
 app.post('/tokenize', (req, res) => {
-  
   console.log('Request', req.form)
-
-
-
 })
 
 app.get('/procesar-pago', (req, res) => {
